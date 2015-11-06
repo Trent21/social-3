@@ -19,7 +19,7 @@ export default {
 			        	date: moment()
 			        },
 		        ],
-		        liked: false,
+		        likes: 0,
 		        newComment: "",
 		    }
 		],
