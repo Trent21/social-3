@@ -1,5 +1,11 @@
 <style>
-    
+.navbar{
+  color: white !important;
+}
+
+.btn{
+  color: white !important;
+}
 </style>
 
 <template>
@@ -7,8 +13,11 @@
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <i class="fa fa-bars fa-lg"></i>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
       </button>
       <span v-if="showBrand">
         <a class="navbar-brand" href="#">
@@ -16,14 +25,16 @@
         </a>
       </span>
     </div>
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <div class="collapse navbar-collapse" id="navbar">
       <ul class="nav navbar-nav">
-        <li><a href="/">Home
-        </a></li>
-        <li><a href="/messages">Messages </a></li>
+        <li><a href="/">Home</a></li>
+        <li><a href="/messages">Messages</a></li>
+        <li><a href="/friends">Friends</a></li>
+        <li><a href="/orientation">Orientation</a></li>
+        <li><a href="/blog">Blog</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="/account">Account</a></li>
+        <li><a href="/">Logout</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

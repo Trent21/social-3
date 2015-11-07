@@ -60,7 +60,7 @@
 
 }
 </style>
-hi
+
 <template>
 <div  v-for="post in posts | orderBy 'date' -1" class="panel">
     <div class="panel-body post-panel">
@@ -72,7 +72,8 @@ hi
     </div>
     <div class="options">
         <a href="#" @click.prevent="focusComment()">Comment</a> |
-        <a href="#" @click.prevent="toggleLike(post)" v-model="post.id + '-liked'">Unlike</a>
+        <a href="#" @click.prevent="post.liked = !post.liked" v-show="post.liked">Unlike</a>
+        <a href="#" @click.prevent="post.liked = !post.liked" v-show="!post.liked">Like</a>
     </div>
     <div class="panel-body comment-panel">
         <div class="post-footer">
@@ -85,7 +86,7 @@ hi
                 <div class="input-group form-group">
                     <input type="text" id="comment-box" v-model="post.newComment" class="form-control" placeholder="Post a comment...">
                     <span class="input-group-btn">
-                        <input type="submit" class="btn btn-default" v-on:click.prevent="submitComment(post)">Post</button>
+                        <input type="submit" class="btn btn-primary" v-on:click.prevent="submitComment(post)">Post</button>
                     </span>
                 </div>
             </form>
