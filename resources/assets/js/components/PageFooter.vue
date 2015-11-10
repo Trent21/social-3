@@ -13,7 +13,7 @@
 </template>
 
 <script lang="es6">
-var moment = require('moment');
+var moment = require('moment');2
 export default {
     data(){
         return {
@@ -29,7 +29,7 @@ export default {
 	padding-bottom: 3em;
 	padding-top: 2em;
 	min-height: 170px;
-	background-color: #000D28;
+	background-color: #222;
 	
 	h3{
 		color: #ccc;

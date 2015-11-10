@@ -15055,6 +15055,10 @@ hr.on-light {
   font-weight: 400;
   src: local('RobotoDraft Italic'), local('RobotoDraft-Italic'), local('Roboto-Italic'), url(../fonts/RobotoDraftItalic.woff2) format('woff2'), url(../fonts/RobotoDraftItalic.woff) format('woff');
 }
+.content {
+  height: 100%;
+  min-height: 500px;
+}
 .homepage-header {
   padding-bottom: 60px;
   padding-top: 60px;

@@ -1,7 +1,8 @@
+
 <!DOCTYPE html>
 <html>
     <head>
-        <title>@yield('title')Social</title>
+        <title>Social</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> <!--320-->
         <link rel="stylesheet" href="/css/app.css">
@@ -10,7 +11,24 @@
     <body>
     	<div id="app">
             <div class="content">
-               @yield('content') 
+               <navbar brand="false" :current-user.sync="currentUser"></navbar>
+<div class="container-fluid">
+<div class="row">
+	<div class="col-sm-4">
+		<avatarbox :current-user.sync="currentUser" :users.sync="users"></avatarbox>		
+		<messages 
+			:current-user.sync="currentUser"
+			:users.sync="users"
+			></messages>
+		<orientation></orientation>
+	</div>
+	<div class="col-sm-8">
+		<poststatus :posts.sync="posts" :current-user.sync="currentUser"></poststatus>
+		<feed :current-user.sync="currentUser" :users.sync="users" :posts.sync="posts"></feed>
+	</div>
+</div>
+</div>
+ 
             </div>
             <pagefooter></pagefooter>
         </div>

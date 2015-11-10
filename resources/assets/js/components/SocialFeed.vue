@@ -71,7 +71,7 @@
         <p class="post-content">{{ post.content }}</p>
     </div>
     <div class="options">
-        <a href="#" @click.prevent="focusComment()">Comment</a> |
+        <a href="#" @click.prevent="focusComment()">Collaborate</a> |
         <a href="#" @click.prevent="post.liked = !post.liked" v-show="post.liked">Unlike</a>
         <a href="#" @click.prevent="post.liked = !post.liked" v-show="!post.liked">Like</a>
     </div>
@@ -84,7 +84,7 @@
             </div>
             <form>
                 <div class="input-group form-group">
-                    <input type="text" id="comment-box" v-model="post.newComment" class="form-control" placeholder="Post a comment...">
+                    <input type="text" id="comment-box" v-model="post.newComment" class="form-control" placeholder="Contribute...">
                     <span class="input-group-btn">
                         <input type="submit" class="btn btn-primary" v-on:click.prevent="submitComment(post)">Post</button>
                     </span>

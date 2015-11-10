@@ -3,8 +3,8 @@ var SocialFeed = require('./components/SocialFeed.vue');
 var Navbar = require('./components/Navbar.vue');
 var AvatarBox = require('./components/AvatarBox.vue');
 var PostStatus = require('./components/PostStatus.vue');
-var FriendsList = require('./components/FriendsList.vue');
 var Login = require('./components/Login.vue');
+var Orientation = require('./components/Orientation.vue');
 var Register = require('./components/Register.vue');
 var PageFooter = require('./components/PageFooter.vue');
 var MessagesFeed = require('./components/MessagesFeed.vue');
@@ -15,11 +15,11 @@ export default {
         'navbar': Navbar,
         'avatarbox': AvatarBox,
         'poststatus': PostStatus,
-        'friendslist': FriendsList,
         'login': Login,
+        'orientation': Orientation,
         'register': Register,
         'pagefooter': PageFooter,
-        'messagesfeed': MessagesFeed,
+        'messages' : MessagesFeed,
     },
 	data: {
 		currentUserID: 2,
@@ -52,14 +52,15 @@ export default {
 		        liked: false,
 		        newComment: "",
 		    },
-
+		
 		],
 		users: {
 		    1: {
 		    	id: 1,
 		        email: 'test@test.com',
-		        username: 'user',
+		        username: 'user123',
 		        name: 'John Doe',
+		        available: false,
 		        imgpath: '/images/default-avatar.png',
 		    },
 		    2: {
@@ -68,23 +69,19 @@ export default {
 		        username: 'jimmycook',
 		        name: 'Jimmy Cook',
 		        imgpath: '/images/default-avatar.png',
-		    }
+		        available: false,
+		        friends: [1, 3],
+		    },		
+		    3: {
+		    	id: 3,
+		        email: 'hello@bob.com',
+		        username: 'socialnetworker',
+		        name: 'Bob',
+		        available: true,
+		        imgpath: '/images/default-avatar.png',
+		    },	
+
 		},
-		messages: [
-			{
-				users[1, 2],
-				[ 
-					{
-						user: 1,
-						message: "Hi",
-					},
-					{
-						user: 2,
-						message: "Hello",
-					},
-				],
-			},
-		]
 	},
 	computed: {
 		currentUser: function() {

@@ -28,10 +28,8 @@
     <div class="collapse navbar-collapse" id="navbar">
       <ul class="nav navbar-nav">
         <li><a href="/">Home</a></li>
-        <li><a href="/messages">Messages</a></li>
-        <li><a href="/friends">Friends</a></li>
-        <li><a href="/orientation">Orientation</a></li>
-        <li><a href="/blog">Blog</a></li>
+        <li @click.prevent="openOrientation()"><a>Orientation</a></li>
+        <li @click.prevent="openFriends()"><a>Friends</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/">Logout</a></li>
@@ -43,7 +41,7 @@
 
 <script lang="es6">
     export default {
-        props: ['active', 'brand'],
+        props: ['active', 'brand', 'currentUser'],
         data() {
             return {
               showBrand: false,
@@ -52,6 +50,15 @@
         ready: function() {
         },
         methods: {
+          openOrientation: function(){
+            $('#orientation').modal('toggle')
+
+          },
+          openFriends: function(){
+            if(this.currentUser.friends.length > 0)
+                $('#friendslist').modal('toggle')
+            else alert('You have 0 friends, so the friends list cannot be shown.')
+          }
         },
         filters: {
         }

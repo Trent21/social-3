@@ -25833,8 +25833,8 @@ var SocialFeed = require('./components/SocialFeed.vue');
 var Navbar = require('./components/Navbar.vue');
 var AvatarBox = require('./components/AvatarBox.vue');
 var PostStatus = require('./components/PostStatus.vue');
-var FriendsList = require('./components/FriendsList.vue');
 var Login = require('./components/Login.vue');
+var Orientation = require('./components/Orientation.vue');
 var Register = require('./components/Register.vue');
 var PageFooter = require('./components/PageFooter.vue');
 var MessagesFeed = require('./components/MessagesFeed.vue');
@@ -25845,11 +25845,11 @@ exports['default'] = {
 		'navbar': Navbar,
 		'avatarbox': AvatarBox,
 		'poststatus': PostStatus,
-		'friendslist': FriendsList,
 		'login': Login,
+		'orientation': Orientation,
 		'register': Register,
 		'pagefooter': PageFooter,
-		'messagesfeed': MessagesFeed
+		'messages': MessagesFeed
 	},
 	data: {
 		currentUserID: 2,
@@ -25880,8 +25880,9 @@ exports['default'] = {
 			1: {
 				id: 1,
 				email: 'test@test.com',
-				username: 'user',
+				username: 'user123',
 				name: 'John Doe',
+				available: false,
 				imgpath: '/images/default-avatar.png'
 			},
 			2: {
@@ -25889,8 +25890,19 @@ exports['default'] = {
 				email: 'jimmy.cook.1993@gmail.com',
 				username: 'jimmycook',
 				name: 'Jimmy Cook',
+				imgpath: '/images/default-avatar.png',
+				available: false,
+				friends: [1, 3]
+			},
+			3: {
+				id: 3,
+				email: 'hello@bob.com',
+				username: 'socialnetworker',
+				name: 'Bob',
+				available: true,
 				imgpath: '/images/default-avatar.png'
 			}
+
 		}
 	},
 	computed: {
@@ -25902,26 +25914,42 @@ exports['default'] = {
 };
 module.exports = exports['default'];
 
-},{"./components/AvatarBox.vue":94,"./components/FriendsList.vue":95,"./components/Login.vue":96,"./components/MessagesFeed.vue":97,"./components/Navbar.vue":98,"./components/PageFooter.vue":99,"./components/PostStatus.vue":100,"./components/Register.vue":101,"./components/SocialFeed.vue":102,"moment":17}],94:[function(require,module,exports){
-require("insert-css")(".avatar-box,.avatar-box span{display:inline-block}.avatar-box img{height:auto;float:left;width:100px;border-radius:6%}.avatar-box .user-info{float:right;padding-left:10px}.avatar-box .user-info .spacer{height:12px}.avatar-box .user-info h3,.avatar-box .user-info p{margin-bottom:0}");
-var __vue_template__ = "<div class=\"panel\">\n\t<div class=\"panel-body\">\n\t\t<div class=\"avatar-box\">\n            <img :src=\"currentUser.imgpath\" alt=\"Avatar\" class=\"avatar-status\"> \n            <div class=\"user-info\">\n            \t<p><strong>{{currentUser.name}}</strong></p>\n\t            <p><a href=\"/user/{{currentUser.username}}\">@{{ currentUser.username }}</a></p>\n\t            <div class=\"spacer\"></div>\n\t            <h3>12 <small>friends</small></h3>\n            </div>            \n        </div>         \n\t</div>\n</div>";
+},{"./components/AvatarBox.vue":94,"./components/Login.vue":95,"./components/MessagesFeed.vue":96,"./components/Navbar.vue":97,"./components/Orientation.vue":98,"./components/PageFooter.vue":99,"./components/PostStatus.vue":100,"./components/Register.vue":101,"./components/SocialFeed.vue":102,"moment":17}],94:[function(require,module,exports){
+require("insert-css")(".avatar-box,.avatar-box span{display:inline-block}.avatar-box img{height:auto;float:left;width:100px;border-radius:6%}.avatar-box .user-info{float:right;padding-left:10px}.avatar-box .user-info .spacer{height:12px}.avatar-box .user-info h3,.avatar-box .user-info p{margin-bottom:0}.friend{clear:both}.friend img{height:auto;width:50px;border-radius:6%;float:left}.friend span{margin-left:1em;margin-top:4px;float:left}");
+var __vue_template__ = "<div class=\"panel\">\n\t<div class=\"panel-body\">\n\t\t<div class=\"avatar-box\">\n            <img :src=\"currentUser.imgpath\" alt=\"Avatar\" class=\"avatar-status\"> \n            <div class=\"user-info\">\n            \t<p><strong>{{currentUser.name}}</strong></p>\n\t            <p><a href=\"/user/{{currentUser.username}}\">@{{ currentUser.username }}</a></p>\n\t            <div class=\"spacer\"></div>\n\t            <h3 @click=\"showFriends()\">{{currentUser.friends.length}} <a @click.prevent=\"\"><small>friends</small></a></h3>\n            </div>            \n        </div>         \n\t</div>\n</div>\n\n<div id=\"friendslist\" class=\"modal fade\" role=\"dialog\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <h4>Friends</h4>\n            </div>\n            <div class=\"modal-body\">\n                <div v-for=\"f in currentUser.friends\" class=\"friend\">\n                         <hr>\n\n                        <img :src=\"users[f].imgpath\" alt=\"Avatar\" class=\"avatar-status\">\n                        <span><strong>{{users[f].name}}</strong> <i style=\"color: #3BB03B\" v-show=\"users[f].available\">available</i><br><a href=\"/user/users[f].username}}\">@{{ users[f].username }}</a></span>\n                        <button class=\"btn btn-primary pull-right\" @click=\"removeFriend(f)\">Remove Friend</button>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                \n            </div>\n        </div><!-- /.modal-content -->\n    </div><!-- /.modal-dialog -->\n</div><!-- /.modal -->";
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
 var moment = require('moment');
+window.$ = window.jQuery = require('jquery');
+
 exports['default'] = {
-    props: ['currentUser']
+    methods: {
+        showFriends: function showFriends() {
+            console.log(this.currentUser.friends.length);
+            if (this.currentUser.friends.length > 0) $('#friendslist').modal('toggle');else alert('You have 0 friends, so the friends list cannot be shown.');
+        },
+        removeFriend: function removeFriend(friendID) {
+            var i = this.currentUser.friends.indexOf(friendID);
+            if (i != -1) {
+                this.currentUser.friends.splice(i, 1);
+            }
+            if (this.currentUser.friends.length < 1) {
+                $('#friendslist').modal('toggle');
+            }
+        }
+    },
+    computed: {},
+    props: ['currentUser', 'users']
 };
 module.exports = exports['default'];
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = __vue_template__;
 
-},{"insert-css":14,"moment":17}],95:[function(require,module,exports){
-
-},{}],96:[function(require,module,exports){
+},{"insert-css":14,"jquery":15,"moment":17}],95:[function(require,module,exports){
 require("insert-css")(".login-form input{margin-top:20px}.login-form a{margin-top:35px;margin-bottom:20px}");
-var __vue_template__ = "<div class=\"login-form\">\n    <form action=\"/home\">\n        <input type=\"text\" class=\"form-control floating-label\" placeholder=\"Email\">\n        <input type=\"password\" class=\"form-control floating-label\" placeholder=\"Password\">  \n        <input type=\"submit\" class=\"btn btn-primary btn-block\" value=\"Submit\">\n    </form>\n\n    <p v-show=\"showLink\" class=\"text-center\"><a @click.prevent=\"focus('#register-start', '.modal')\">Need an account?</a></p>\n</div>";
+var __vue_template__ = "<div class=\"login-form\">\n    <form action=\"/home\">\n        <input type=\"text\" class=\"form-control floating-label\" placeholder=\"Email\">\n        <input type=\"password\" class=\"form-control floating-label\" placeholder=\"Password\">  \n        <input type=\"submit\" class=\"btn btn-primary btn-block\" value=\"Login\">\n    </form>\n\n    <p v-show=\"showLink\" class=\"text-center\"><a @click.prevent=\"focus('#register-start', '.modal')\">Need an account?</a></p>\n</div>";
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -25944,53 +25972,164 @@ exports['default'] = {
 module.exports = exports['default'];
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = __vue_template__;
 
-},{"bootstrap":1,"insert-css":14,"jquery":15,"moment":17}],97:[function(require,module,exports){
-var __vue_template__ = "<div class=\"panel\">\n\t<div class=\"panel-body\">\n\t\tflkawjerfe\n\t</div>\n</div>";
+},{"bootstrap":1,"insert-css":14,"jquery":15,"moment":17}],96:[function(require,module,exports){
+require("insert-css")("span.message{color:#fff;background-color:#2196f3;margin-top:.3em;padding:.8em;border-radius:2em;float:left;width:auto;max-width:80%;clear:both}span.current-user{float:right;background-color:#555}.messages{overflow-y:auto;max-height:400px}.conversation{padding-bottom:10px}.conversation-header{position:relative}.conversation-header img{height:auto;width:50px;border-radius:6%}.conversation-header span{position:absolute;top:4px;left:62px}.conversation-header div{float:left}");
+var __vue_template__ = "<div class=\"panel\">\n    <div class=\"panel-body\"><h4>Private Messaging</h4></div>\n        <div class=\"panel-body\" v-for=\"conversation in conversations\">\n            <div class=\"conversation-header\">\n                <img :src=\"conversation.withUser.imgpath\" alt=\"Avatar\" class=\"avatar-status\">\n                <span><strong>{{conversation.withUser.name}}</strong> <i style=\"color: #3BB03B\" v-show=\"conversation.withUser.available\">available</i><br><a href=\"/user/conversation.withUser.username}}\">@{{ conversation.withUser.username }}</a></span>\n                <button class=\"btn btn-primary pull-right\" data-toggle=\"modal\" data-target=\"#conversation{{conversation.id}}\">Chat</button>\n            </div>\n            <div id=\"conversation{{conversation.id}}\" class=\"modal fade\" role=\"dialog\">\n                <div class=\"modal-dialog\" role=\"document\">\n                    <div class=\"modal-content\">\n                        <div class=\"modal-header\">\n                            <button type=\"button\" class=\"close\" data-dismiss=\"modal\">×</button>\n\n                            <h4>Conversation with <a href=\"\">@{{conversation.withUser.username}}</a></h4>\n                        </div>\n                        <div class=\"modal-body\">\n                            <div id=\"messages{{conversation.id}}\" class=\"messages\" data-spy=\"scroll\">\n                                    <span class=\"message\" v-for=\"message in conversation.messages\" :class=\"{'current-user': isCurrentUser(message.user)}\">{{message.message}}</span>\n                            </div>\n                            <hr>\n                            <form class=\"status-form status-form-custom\">\n                                <div class=\"input-group form-group-custom\">\n                                    <input type=\"text\" v-model=\"message\" class=\"form-control\" placeholder=\"\">\n                                    <span class=\"input-group-btn\">\n                                        <button class=\"btn btn-primary btn\" v-on:click.prevent=\"submitMessage(conversation)\">Send</button>\n                                    </span>\n                                </div>\n                            </form>\n                        </div>\n                        <div class=\"modal-footer\">\n                            \n                        </div>\n                    </div><!-- /.modal-content -->\n                </div><!-- /.modal-dialog -->\n            </div><!-- /.modal --> \n        </div>\n        <div class=\"panel-body\">\n            <button class=\"btn btn-blick btn-primary\" @click.prevent=\"startAConversation()\" style=\"width: 100%\">Create a conversation</button>\n        </div>\n\n    </div>\n\n\n<div id=\"start-conversation\" class=\"modal fade\" role=\"dialog\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\">×</button>\n\n                <h4>Create a Conversation</h4>\n\n            </div>\n            <div class=\"modal-body\">\n                <div v-for=\"f in currentUser.friends\" class=\"friend\">\n                         <hr>\n                        \n                        <img :src=\"users[f].imgpath\" alt=\"Avatar\" class=\"avatar-status\">\n                        <span><strong>{{users[f].name}}</strong> <i style=\"color: #3BB03B\" v-show=\"users[f].available\">available</i><br><a href=\"/user/users[f].username}}\">@{{ users[f].username }}</a></span>\n                        <button class=\"btn btn-primary pull-right\" @click=\"chatWith(f)\">Chat</button>\n                </div>\n\n            </div>\n            <div class=\"modal-footer\">\n                \n            </div>\n        </div><!-- /.modal-content -->\n    </div><!-- /.modal-dialog -->\n</div><!-- /.modal -->";
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
 var moment = require('moment');
+window.$ = window.jQuery = require('jquery');
+
 exports['default'] = {
+    methods: {
+        isCurrentUser: function isCurrentUser(userID) {
+            if (this.currentUser.id == userID) return true;
+            return false;
+        },
+        submitMessage: function submitMessage(conversation) {
+            if (this.message != '') {
+                conversation.messages.push({
+                    user: this.currentUser.id,
+                    message: this.message
+                });
+                this.message = '';
+                $('#messages' + conversation.id).animate({
+                    scrollTop: $('#messages' + conversation.id).get(0).scrollHeight }, 100);
+            }
+        },
+        startAConversation: function startAConversation() {
+            $('#start-conversation').modal('toggle');
+        },
+        chatWith: function chatWith(userID) {
+            var conversationid = this.conversations.length + 1;
+            console.log(conversationid);
+            this.conversations.push({
+                withUser: this.users[userID],
+                lastUpdated: moment(),
+                id: conversationid,
+                messages: []
+            });
+            $('#start-conversation').modal('toggle');
+        }
+    },
     data: function data() {
-        return {};
-    }
+        return {
+            conversations: [{
+                withUser: this.users[1],
+                lastUpdated: moment(),
+                id: 1,
+                messages: [{
+                    user: 1,
+                    message: 'Hi!'
+                }, {
+                    user: 2,
+                    message: 'Hello there.'
+                }, {
+                    user: 1,
+                    message: 'How are you?'
+                }, {
+                    user: 2,
+                    message: 'Very well thank you! Yourself?'
+                }, {
+                    user: 1,
+                    message: 'Oh there is a meeting tomorrow, I forgot to at work today, 9am in the conference room'
+                }, {
+                    user: 2,
+                    message: 'Thank you for the heads up I will be there. I am very well thank you!'
+                }]
+            }, {
+                withUser: this.users[3],
+                lastUpdated: moment(),
+                id: 2,
+                messages: [{
+                    user: 3,
+                    message: 'Hi!'
+                }, {
+                    user: 2,
+                    message: 'Hello there.'
+                }, {
+                    user: 3,
+                    message: 'How are you?'
+                }, {
+                    user: 2,
+                    message: 'Very well thank you! Yourself?'
+                }, {
+                    user: 3,
+                    message: 'Oh there is a meeting tomorrow, I forgot to at work today, 9am in the conference room'
+                }, {
+                    user: 2,
+                    message: 'Thank you for the heads up I will be there. I am very well thank you!'
+                }]
+            }]
+        };
+    },
+    props: ['users', 'currentUser']
 };
 module.exports = exports['default'];
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = __vue_template__;
 
-},{"moment":17}],98:[function(require,module,exports){
+},{"insert-css":14,"jquery":15,"moment":17}],97:[function(require,module,exports){
 require("insert-css")(".btn,.navbar{color:#fff!important}");
-var __vue_template__ = "<nav class=\"navbar navbar-default\">\n  <div class=\"container-fluid\">\n    <!-- Brand and toggle get grouped for better mobile display -->\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n      <span v-if=\"showBrand\">\n        <a class=\"navbar-brand\" href=\"#\">\n          Social\n        </a>\n      </span>\n    </div>\n    <div class=\"collapse navbar-collapse\" id=\"navbar\">\n      <ul class=\"nav navbar-nav\">\n        <li><a href=\"/\">Home</a></li>\n        <li><a href=\"/messages\">Messages</a></li>\n        <li><a href=\"/friends\">Friends</a></li>\n        <li><a href=\"/orientation\">Orientation</a></li>\n        <li><a href=\"/blog\">Blog</a></li>\n      </ul>\n      <ul class=\"nav navbar-nav navbar-right\">\n        <li><a href=\"/\">Logout</a></li>\n      </ul>\n    </div><!-- /.navbar-collapse -->\n  </div><!-- /.container-fluid -->\n</nav>";
+var __vue_template__ = "<nav class=\"navbar navbar-default\">\n  <div class=\"container-fluid\">\n    <!-- Brand and toggle get grouped for better mobile display -->\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#navbar\" aria-expanded=\"false\" aria-controls=\"navbar\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n        <span class=\"icon-bar\"></span>\n      </button>\n      <span v-if=\"showBrand\">\n        <a class=\"navbar-brand\" href=\"#\">\n          Social\n        </a>\n      </span>\n    </div>\n    <div class=\"collapse navbar-collapse\" id=\"navbar\">\n      <ul class=\"nav navbar-nav\">\n        <li><a href=\"/\">Home</a></li>\n        <li @click.prevent=\"openOrientation()\"><a>Orientation</a></li>\n        <li @click.prevent=\"openFriends()\"><a>Friends</a></li>\n      </ul>\n      <ul class=\"nav navbar-nav navbar-right\">\n        <li><a href=\"/\">Logout</a></li>\n      </ul>\n    </div><!-- /.navbar-collapse -->\n  </div><!-- /.container-fluid -->\n</nav>";
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-    value: true
+  value: true
 });
 exports['default'] = {
-    props: ['active', 'brand'],
-    data: function data() {
-        return {
-            showBrand: false
-        };
+  props: ['active', 'brand', 'currentUser'],
+  data: function data() {
+    return {
+      showBrand: false
+    };
+  },
+  ready: function ready() {},
+  methods: {
+    openOrientation: function openOrientation() {
+      $('#orientation').modal('toggle');
     },
-    ready: function ready() {},
-    methods: {},
-    filters: {}
+    openFriends: function openFriends() {
+      if (this.currentUser.friends.length > 0) $('#friendslist').modal('toggle');else alert('You have 0 friends, so the friends list cannot be shown.');
+    }
+  },
+  filters: {}
 };
 module.exports = exports['default'];
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = __vue_template__;
 
-},{"insert-css":14}],99:[function(require,module,exports){
-require("insert-css")(".page-footer{margin-top:2em;padding-bottom:3em;padding-top:2em;min-height:170px;background-color:#000D28}.page-footer h3{color:#ccc}.page-footer p{line-height:2.3em;color:#ccc}");
+},{"insert-css":14}],98:[function(require,module,exports){
+var __vue_template__ = "<div class=\"panel\">\n\t<div class=\"panel-body\">\n\t\t<h3 style=\"margin-top: 5px\">New Here?</h3>\n\t\t<p>Check out our orientation area...</p>\n\t\t<a role=\"button\" @click.prevent=\"showModal()\" class=\"btn btn-primary btn-block\">Go</a>\n\t</div>\n</div>\n\n<div id=\"orientation\" class=\"modal fade\" role=\"dialog\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content\">\n            <div class=\"modal-header\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\">×</button>\n                <h4>Welcome to Social</h4>         \n            </div>\n            <div class=\"modal-body\">\n            \t<hr>\n                <p>Hi there, here's a quick orientation in social. Note: this is an early prototype; there are still features on the way... </p>\n                <hr>\n                <p>To post a status, go to the top of the home page and click on the input field that says 'Post a status', press submit to post it.</p>\n                <hr>\n                <p>You can interact with a status in many ways, for example to like a status you can just click like.</p>\n                <p>To collaborate or contribute to a status, just hit collaborate and it'll take you to the input field. When you're happy with your addition, just hit submit.</p>\n                <hr>\n                <p>To private message with somebody, just hit create a conversation and you'll see a new conversation appear in your list.</p>\n                <p>To continue a conversation, just hit chat in your list of conversations.</p>\n                <hr>\n                <p>You can view your friends just by clicking on your friend count.</p>\n                <p>While viewing your friends you can also remove them by hitting the remove button.</p>\n                <hr>\n                <p>To log out of social, just press the logout link in the navigation.</p>\n\t\t\t\t<hr>\n\t\t\t\t<p>Hopefully this gives you enough to get started using Social, good luck!</p>\n\n            </div>\n            <div class=\"modal-footer\">\n                \n            </div>\n        </div><!-- /.modal-content -->\n    </div><!-- /.modal-dialog -->\n</div><!-- /.modal -->";
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+var moment = require('moment');
+exports['default'] = {
+	methods: {
+		showModal: function showModal() {
+			$('#orientation').modal('toggle');
+		}
+	},
+	data: function data() {
+		return {};
+	}
+};
+module.exports = exports['default'];
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = __vue_template__;
+
+},{"moment":17}],99:[function(require,module,exports){
+require("insert-css")(".page-footer{margin-top:2em;padding-bottom:3em;padding-top:2em;min-height:170px;background-color:#222}.page-footer h3{color:#ccc}.page-footer p{line-height:2.3em;color:#ccc}");
 var __vue_template__ = "<footer class=\"page-footer\">\n\t<div class=\"container\">\n\t\t<div class=\"row\">\n\t\t\t<div class=\"col-sm-4\">\n\t\t\t\t<h3>Social</h3>\n\t\t\t\t<p>A social media prototype. Created by Jimmy Cook as part of a student project at Fife College and Abertay University.</p>\t\t\t\n\t\t\t</div>\n\n\t\t</div>\n\t</div>\n</footer>";
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var moment = require('moment');
+var moment = require('moment');2;
 exports['default'] = {
     data: function data() {
         return {};
@@ -26035,7 +26174,7 @@ module.exports = exports['default'];
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = __vue_template__;
 
 },{"insert-css":14,"moment":17}],101:[function(require,module,exports){
-var __vue_template__ = "<div class=\"login-form\">\n<form action=\"/home\">\n    <input type=\"text\" id=\"register-start\" class=\"form-control floating-label\" placeholder=\"Username\">\n    <input type=\"text\" class=\"form-control floating-label\" placeholder=\"Email\">\n    <input type=\"password\" class=\"form-control floating-label\" placeholder=\"Password\">    \n    <input type=\"password\" class=\"form-control floating-label\" placeholder=\"Confirm Password\">    \n    <input type=\"submit\" class=\"btn btn-primary btn-block\" value=\"Submit\">\n</form>\n</div>";
+var __vue_template__ = "<div class=\"login-form\">\n<form action=\"/home\">\n    <input type=\"text\" id=\"register-start\" class=\"form-control floating-label\" placeholder=\"Username\">\n    <input type=\"text\" class=\"form-control floating-label\" placeholder=\"Email\">\n    <input type=\"password\" class=\"form-control floating-label\" placeholder=\"Password\">    \n    <input type=\"password\" class=\"form-control floating-label\" placeholder=\"Confirm Password\">    \n    <input type=\"submit\" class=\"btn btn-primary btn-block\" value=\"Register\">\n</form>\n</div>";
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -26052,7 +26191,7 @@ module.exports = exports['default'];
 
 },{"moment":17}],102:[function(require,module,exports){
 require("insert-css")(".feed__post{padding:10px 0}.comment-panel,.post-panel{padding-bottom:0}.status-form{margin-bottom:2em}.comment-panel{padding-top:0}.post-header{position:relative}.post-header img{height:auto;width:43px;border-radius:6%}.post-header span{position:absolute;top:0;left:55px}.post-header div{float:left}.comment{position:relative}.comment span{position:absolute;top:0;left:55px}.comment img{height:43px}.post-content{margin:1em 0;font-size:16px}.options{padding-top:.5em;padding-bottom:.5em;padding-left:1em;border-top:1px solid #e6e6e6;border-bottom:1px solid #e6e6e6;margin-bottom:1.5em}");
-var __vue_template__ = "<div v-for=\"post in posts | orderBy 'date' -1\" class=\"panel\">\n    <div class=\"panel-body post-panel\">\n        <div class=\"post-header\">\n            <img :src=\"users[post.user].imgpath\" alt=\"Avatar\" class=\"avatar-status\">\n            <span><strong>{{users[post.user].name}}</strong><br><a href=\"/user/{{users[post.user].username}}\">@{{ users[post.user].username }}</a> - {{ post.date | fromNow }} </span>\n        </div>            \n        <p class=\"post-content\">{{ post.content }}</p>\n    </div>\n    <div class=\"options\">\n        <a href=\"#\" @click.prevent=\"focusComment()\">Comment</a> |\n        <a href=\"#\" @click.prevent=\"post.liked = !post.liked\" v-show=\"post.liked\">Unlike</a>\n        <a href=\"#\" @click.prevent=\"post.liked = !post.liked\" v-show=\"!post.liked\">Like</a>\n    </div>\n    <div class=\"panel-body comment-panel\">\n        <div class=\"post-footer\">\n            <div class=\"comment\" v-for=\"comment in post.comments | orderBy 'date'\">\n                    <img :src=\"users[comment.user].imgpath\" alt=\"Avatar\" class=\"avatar-comment\">\n                    <span><strong>{{users[comment.user].name}}</strong> <a href=\"/user/{{users[post.user].username}}\">@{{ users[comment.user].username }}</a><br>{{comment.message}}</span>\n                <hr>\n            </div>\n            <form>\n                <div class=\"input-group form-group\">\n                    <input type=\"text\" id=\"comment-box\" v-model=\"post.newComment\" class=\"form-control\" placeholder=\"Post a comment...\">\n                    <span class=\"input-group-btn\">\n                        <input type=\"submit\" class=\"btn btn-primary\" v-on:click.prevent=\"submitComment(post)\">Post\n                    </span>\n                </div>\n            </form>\n        </div> \n    </div>\n</div>";
+var __vue_template__ = "<div v-for=\"post in posts | orderBy 'date' -1\" class=\"panel\">\n    <div class=\"panel-body post-panel\">\n        <div class=\"post-header\">\n            <img :src=\"users[post.user].imgpath\" alt=\"Avatar\" class=\"avatar-status\">\n            <span><strong>{{users[post.user].name}}</strong><br><a href=\"/user/{{users[post.user].username}}\">@{{ users[post.user].username }}</a> - {{ post.date | fromNow }} </span>\n        </div>            \n        <p class=\"post-content\">{{ post.content }}</p>\n    </div>\n    <div class=\"options\">\n        <a href=\"#\" @click.prevent=\"focusComment()\">Collaborate</a> |\n        <a href=\"#\" @click.prevent=\"post.liked = !post.liked\" v-show=\"post.liked\">Unlike</a>\n        <a href=\"#\" @click.prevent=\"post.liked = !post.liked\" v-show=\"!post.liked\">Like</a>\n    </div>\n    <div class=\"panel-body comment-panel\">\n        <div class=\"post-footer\">\n            <div class=\"comment\" v-for=\"comment in post.comments | orderBy 'date'\">\n                    <img :src=\"users[comment.user].imgpath\" alt=\"Avatar\" class=\"avatar-comment\">\n                    <span><strong>{{users[comment.user].name}}</strong> <a href=\"/user/{{users[post.user].username}}\">@{{ users[comment.user].username }}</a><br>{{comment.message}}</span>\n                <hr>\n            </div>\n            <form>\n                <div class=\"input-group form-group\">\n                    <input type=\"text\" id=\"comment-box\" v-model=\"post.newComment\" class=\"form-control\" placeholder=\"Contribute...\">\n                    <span class=\"input-group-btn\">\n                        <input type=\"submit\" class=\"btn btn-primary\" v-on:click.prevent=\"submitComment(post)\">Post\n                    </span>\n                </div>\n            </form>\n        </div> \n    </div>\n</div>";
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {

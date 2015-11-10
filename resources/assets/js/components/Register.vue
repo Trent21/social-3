@@ -5,7 +5,7 @@
     <input type="text" class="form-control floating-label" placeholder="Email">
     <input type="password" class="form-control floating-label" placeholder="Password">    
     <input type="password" class="form-control floating-label" placeholder="Confirm Password">    
-    <input type="submit" class="btn btn-primary btn-block" value="Submit">
+    <input type="submit" class="btn btn-primary btn-block" value="Register">
 </form>
 </div>
 </template>
